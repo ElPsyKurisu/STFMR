@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 from numpy.polynomial import Polynomial
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
 
 def read_callibration_file(filepath):
     """
@@ -40,43 +39,46 @@ Now I want a function that I can input whatever field strength I want and it wil
 make sure to throw erros if out of range
 '''
 
-def field_to_volts(field, callibration_file):
-    voltage_in, field_out = read_callibration_file(callibration_file)
-    #get best fit line
-    a, b = Polynomial.fit(field_out, voltage_in, 1)
-    volts = a*field + b
-    return volts
-'''
-meow = field_to_volts(500, "utils\\1to3_callibration.txt")
-print('herro', meow)
-'''
+def field_to_volts(field, callibration_file) -> float:
+    '''
+    Reads the given filepath of the callibration file using read_callibration_file and performs
+    a linear interpolation on the data by finding the two nearest points in the callibration file
+    and obtaining a line from them to interpolate the desired field.
+       
+    args:
+        callibration_file: The path to the callibration file (str)
+        field: The desired field (float)
+
+    returns:
+        volts: calculated input voltage to reach desired field in volts (float)
+        IndexError: returns none if given field is out of range
+    '''
+    try:
+        voltage_in, field_out = read_callibration_file(callibration_file)
+        higher_index = np.searchsorted(field_out, field)
+        lower_index = higher_index - 1
+        #this is needed to ensure that we dont take the value of arr[-1] which returns the last element
+        if lower_index < 0:
+            raise IndexError
+        slope = (voltage_in[higher_index]-voltage_in[lower_index])/(field_out[higher_index]-field_out[lower_index])
+        intercept = voltage_in[higher_index]-slope*field_out[higher_index]
+        volts = slope*field + intercept
+        return volts
+    except IndexError:
+        print('The given field is out of range of the callibration file')
 
 '''
-Here im going to add a helper function to fit to a log and try
+Now the next function will allow you to set an angle u want with a field strength that you want
+by using the two coils
 '''
 
-def log_func(x, a, b, c):
-    return a**np.log(x + b) + c
+def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude) -> float:
+    x_magnitude = magnitude*np.cos(np.deg2rad(angle))
+    y_magnitude = magnitude*np.sin(np.deg2rad(angle))
+    print(x_magnitude, y_magnitude)
+    x_volts = field_to_volts(x_magnitude, x_callibration_file)
+    y_volts = field_to_volts(y_magnitude, y_callibration_file)
+    return x_volts, y_volts
 
-voltage_in, field_out = read_callibration_file("utils\\1to3_callibration.txt")
-'''
-print(voltage_in)
-print(field_out)
-voltage_range = np.linspace(0,2, 500)
-c,b,a = Polynomial.fit(voltage_in, field_out, 2)
-print(b,a)
-plt.scatter(voltage_in, field_out)
-plt.plot(voltage_in, a*voltage_in**2 + b*voltage_in + c)
-plt.show()
-'''
-
-
-#i should just use scipy curve fit and do log fit
-#x = np.linspace(0,2,50)
-#y = log_func(x, 1, 1, 0)
-#popt, pcov = curve_fit(log_func, voltage_in, field_out, maxfev=2000)
-plt.scatter(voltage_in, field_out)
-plt.plot()
-plt.show()
-
-#might be easier to just linearly interpolate between two points from the given data set, saves us hella time
+test = vectorized_magnetic_field("utils\\1to3_callibration.txt", "utils\\2to4_callibration.txt", 30, 1000)
+print(test)
