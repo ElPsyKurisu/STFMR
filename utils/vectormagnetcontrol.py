@@ -14,7 +14,8 @@ import numpy as np
 def read_callibration_file(filepath):
     """
     Reads the given filepath as a callibration file where the left column should be in volts (V)
-    and the right column in magnetic field (Oe)
+    and the right column in magnetic field (Oe). Note that the callibration file should bound all
+    desired field values as this program will not extrapolate field values.
        
     args:
         filepath: The path to the callibration file (str)
@@ -45,7 +46,7 @@ def field_to_volts(field, callibration_file) -> float:
 
     returns:
         volts: calculated input voltage to reach desired field in volts (float)
-        IndexError: returns none if given field is out of range
+        IndexError: returns none if given field is out of range (None)
     '''
     try:
         voltage_in, field_out = read_callibration_file(callibration_file)
@@ -81,7 +82,7 @@ def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, m
 
     returns:
         volts: calculated input voltage to reach desired field in volts (float)
-        IndexError: returns none if given field is out of range
+        IndexError: returns none if given field is out of range (None)
     '''
     x_magnitude = magnitude*np.cos(np.deg2rad(angle))
     y_magnitude = magnitude*np.sin(np.deg2rad(angle))
