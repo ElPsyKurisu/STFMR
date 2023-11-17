@@ -10,8 +10,6 @@ we will use pandas to read the file
 
 import pandas as pd
 import numpy as np
-from numpy.polynomial import Polynomial
-import matplotlib.pyplot as plt
 
 def read_callibration_file(filepath):
     """
@@ -29,10 +27,6 @@ def read_callibration_file(filepath):
     voltage_input = df['volts'].values
     field_output = df['field'].values
     return voltage_input, field_output
-
-df_x = pd.read_csv("utils\\1to3_callibration.txt", sep="\t") 
-df_y = pd.read_csv("utils\\2to4_callibration.txt", sep="\t")
-# display DataFrame 
 
 '''
 Now I want a function that I can input whatever field strength I want and it will calculate what voltage I need
@@ -65,7 +59,9 @@ def field_to_volts(field, callibration_file) -> float:
         volts = slope*field + intercept
         return volts
     except IndexError:
-        print('The given field is out of range of the callibration file')
+        #change "raise ValueError" to print to remove the error and simply print out the message
+        raise IndexError('The given field is out of range of the callibration file')
+
 
 '''
 Now the next function will allow you to set an angle u want with a field strength that you want
@@ -73,6 +69,20 @@ by using the two coils
 '''
 
 def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude) -> float:
+    '''
+    Calculates the parameterized form of the given angle and magnitude and calls the function
+    field_to_volts to convert to the required ouput voltages on the x_coil and y_coil.
+       
+    args:
+        x_callibration_file: The path to the callibration file for coil x (str)
+        y_callibration_file: The path to the callibration file for coil y (str)
+        angle: The desired angle (float)
+        magnitude: The desired field (float)
+
+    returns:
+        volts: calculated input voltage to reach desired field in volts (float)
+        IndexError: returns none if given field is out of range
+    '''
     x_magnitude = magnitude*np.cos(np.deg2rad(angle))
     y_magnitude = magnitude*np.sin(np.deg2rad(angle))
     print(x_magnitude, y_magnitude)
@@ -80,5 +90,5 @@ def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, m
     y_volts = field_to_volts(y_magnitude, y_callibration_file)
     return x_volts, y_volts
 
-test = vectorized_magnetic_field("utils\\1to3_callibration.txt", "utils\\2to4_callibration.txt", 30, 1000)
+test = vectorized_magnetic_field("utils\\1to3_callibration.txt", "utils\\2to4_callibration.txt", 0, 1000)
 print(test)
