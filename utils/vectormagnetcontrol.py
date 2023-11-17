@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 from numpy.polynomial import Polynomial
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 
 def read_callibration_file(filepath):
     """
@@ -49,7 +50,16 @@ def field_to_volts(field, callibration_file):
 meow = field_to_volts(500, "utils\\1to3_callibration.txt")
 print('herro', meow)
 '''
+
+'''
+Here im going to add a helper function to fit to a log and try
+'''
+
+def log_func(x, a, b, c):
+    return a**np.log(x + b) + c
+
 voltage_in, field_out = read_callibration_file("utils\\1to3_callibration.txt")
+'''
 print(voltage_in)
 print(field_out)
 voltage_range = np.linspace(0,2, 500)
@@ -58,5 +68,15 @@ print(b,a)
 plt.scatter(voltage_in, field_out)
 plt.plot(voltage_in, a*voltage_in**2 + b*voltage_in + c)
 plt.show()
+'''
+
 
 #i should just use scipy curve fit and do log fit
+#x = np.linspace(0,2,50)
+#y = log_func(x, 1, 1, 0)
+#popt, pcov = curve_fit(log_func, voltage_in, field_out, maxfev=2000)
+plt.scatter(voltage_in, field_out)
+plt.plot()
+plt.show()
+
+#might be easier to just linearly interpolate between two points from the given data set, saves us hella time
