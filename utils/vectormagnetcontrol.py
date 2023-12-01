@@ -89,6 +89,6 @@ def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, m
     x_volts = field_to_volts(x_magnitude, x_callibration_file)
     y_volts = field_to_volts(y_magnitude, y_callibration_file)
     return x_volts, y_volts
-
+read_callibraton
 test = vectorized_magnetic_field("utils\\1to3_callibration.txt", "utils\\2to4_callibration.txt", 45, 1000)
 print(test)
