@@ -17,7 +17,8 @@ def read_callibration_file(filepath):
     """
     Reads the given filepath as a callibration file where the left column should be in volts (V)
     and the right column in magnetic field (Oe). Note that the callibration file should bound all
-    desired field values as this program will not extrapolate field values.
+    desired field values as this program will not extrapolate field values. Currently, callibration 
+    files are created by starting at 10V -> -10V -> 10V.
        
     args:
         filepath: The path to the callibration file (str)
@@ -41,12 +42,13 @@ def field_to_volts(field, callibration_file, poll_high=True) -> float:
     '''
     Reads the given filepath of the callibration file using read_callibration_file and performs
     a linear interpolation on the data by finding the two nearest points in the callibration file
-    and obtaining a line from them to interpolate the desired field. This is being edited to not use 
-    numpy search sorted and do it manually to allow for polling
+    and obtaining a line from them to interpolate the desired field. Allows for polling either high
+    or low field. Defaults to high field value.
        
     args:
         callibration_file: The path to the callibration file (str)
         field: The desired field (float)
+        poll_high: Boolean option to decide which curve of the hysteresis to be on (boolean)
 
     returns:
         volts: calculated input voltage to reach desired field in volts (float)
@@ -90,16 +92,21 @@ Now the next function will allow you to set an angle u want with a field strengt
 by using the two coils
 '''
 
-def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude, poll_high=True) -> float:
+def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude,
+                              poll_high_x=True, poll_high_y=True) -> float:
     '''
     Calculates the parameterized form of the given angle and magnitude and calls the function
-    field_to_volts to convert to the required ouput voltages on the x_coil and y_coil.
+    field_to_volts to convert to the required ouput voltages on the x_coil and y_coil. Allows
+    for polling either high field or low field on either coil.
        
     args:
         x_callibration_file: The path to the callibration file for coil x (str)
         y_callibration_file: The path to the callibration file for coil y (str)
         angle: The desired angle (float)
         magnitude: The desired field (float)
+        poll_high_x: Option to poll for x_field high or low -> True is high, False is low (boolean)
+        poll_high_y: Option to poll for y_field high or low -> True is high, False is low (boolean)
+
 
     returns:
         volts: calculated input voltage to reach desired field in volts (float)
@@ -107,8 +114,8 @@ def vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, m
     '''
     x_magnitude = magnitude*np.cos(np.deg2rad(angle))
     y_magnitude = magnitude*np.sin(np.deg2rad(angle))
-    x_volts = field_to_volts(x_magnitude, x_callibration_file, poll_high)
-    y_volts = field_to_volts(y_magnitude, y_callibration_file, poll_high)
+    x_volts = field_to_volts(x_magnitude, x_callibration_file, poll_high_x)
+    y_volts = field_to_volts(y_magnitude, y_callibration_file, poll_high_y)
     return x_volts, y_volts
 
 '''
@@ -116,19 +123,46 @@ Our next step is to call the functions that actually output stuff directly here 
 in the ekpy package and ensures you cycle the field by first polling the field and then bringing it along a certain curve
 could add an optional arg that is poll high or poll low, aka uses diff graphs
 '''
-def output_vector_field(x_callibration_file, y_callibration_file, angle, magnitude, poll_high=True):
+def output_vector_field(x_callibration_file, y_callibration_file, angle, magnitude, do_poll=False, poll_high_x=True, 
+                        poll_high_y=True, print_output=True):
+    '''
+    Outputs the desired magnetic field from the given callibration files via the digilent system. Allows
+    for polling either high field or low field on either coil or skip polling for when sweeping fields. Can
+    still change poll_high_i parameters to change the direction the field is read in. For example if for a given
+    callibration file a field of 1000 Oe will have two voltage parameters due to hysterisis in the magnet's
+    core, poll_high=True will choose the voltage value obtained from polling high on the magnet and coming
+    down to the desired value while poll_high=False will return the value coming from polling low first.
+       
+    args:
+        x_callibration_file: The path to the callibration file for coil x (str)
+        y_callibration_file: The path to the callibration file for coil y (str)
+        angle: The desired angle (float)
+        magnitude: The desired field (float)
+        do_poll: True to poll, False to not poll. False by default (boolean list)
+        poll_high_x: Option to poll for x_field high or low -> True is high, False is low (boolean)
+        poll_high_y: Option to poll for y_field high or low -> True is high, False is low (boolean)
 
-    x_volts, y_volts = vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude, poll_high)
-    if poll_high:
-        digilent.v_out(0,0,10)
-        digilent.v_out(0,1,10)
-        time.sleep(1)
-    else:
-        digilent.v_out(0,0,-10)
-        digilent.v_out(0,1,-10)
-        time.sleep(1)
+
+    returns:
+        None, but prints out calculated x and y input voltages for the given field along with the
+        given paramters if print_output=True
+    '''
+    x_volts, y_volts = vectorized_magnetic_field(x_callibration_file, y_callibration_file, angle, magnitude, poll_high_x, poll_high_y)
+    if do_poll:
+        if poll_high_x:
+            digilent.v_out(0,0,10)
+        if poll_high_y:
+            digilent.v_out(0,1,10)
+        if not poll_high_x:
+            digilent.v_out(0,0,-10)
+        if not poll_high_y:
+            digilent.v_out(0,1,-10)
+    time.sleep(1)
     digilent.v_out(0,0,x_volts)
     digilent.v_out(0,1,y_volts)
+    if print_output:
+        print("x_coil voltage: {}".format(x_volts), "y_coil voltage: {}".format(y_volts))
+        print("Polling: {}".format(do_poll))
 
 
 #test = vectorized_magnetic_field("utils\\1to3_callibration.txt", "utils\\2to4_callibration.txt", 0, 0, False)
