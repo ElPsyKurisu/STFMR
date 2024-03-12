@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "squid-data",
+  "private_key_id": "4932d6071019472ed49c92e052bce728817a148e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDcO2gIv6MWmfjx\nf+RfY/Xd/IxOKHpcRteRnreKQwI0Jcr6YyZ0kbq0s9PpL/dzlFAwyOlwW5GfbHUw\nfFfLFfkhKb2DECKYcrJ/kL4n7WbRBJYTvlM9jU5pOT7HUj5o2y/uaCRr6XxSZpXT\nGdHv0LWiuSyoPERY7UpzuBVGN3tPSfy/jrN3dLEG/wLVzYwk6AXtydKG/ngisesd\nCR4jPT/sGmMdV1dB7/BQEi4krK6JE2986W/2hNUfOG1uMupalGuBsobWjJ3uWvHZ\nW/v9X2b2IpMqJKliCP8aM9ya3YAdT9eA3JuAfOufm7FT9S4y82SzVviA8aGiBTP8\nCQ1iwWUvAgMBAAECggEAILvfubUqO3jFTLfyrM8Bw23/OLrBfSe2cNmDdFSDZlbb\ntZ25IIhslOFJtRZBFHfN94JVWDL0ERsgzAUfU3s/nVND7NAgJEKgD1/nM64Qoy6o\nU+TtIG/5YKB2mU+7IQC7PhdSmouIxAKlcEwdLST7amVVoufaTNFwSITq/JXQiTcy\nddAf9KwOluLApWDByT4PTmcMWPhjdT07OeF1+0W5JFdnyfFND7lC85A5d59FoEcp\ngce3UIhGqS95Q4dPU02DaPllVoFzDcEFSl/LYMNdt9328xdGkp3FLGbBZB76dmvx\nLvpJqahoHdvs0s6czqIxu4fTvLq8FscGym9LWdVnSQKBgQDyHxyCO5SKmhQLw4jG\nyx34PtRuQNiyTwPY2Xt+AwBukLXMTqAZXwdXAWam9uthQhIugGZ6JXZABNO+6fN4\nPmEfaObuHVGfrJSHmf8AxKTi+9VveZd3pxBT9aCezmguIet++3HPyEgW1MK1PLTq\n7FgkNKen2miztDhYNSgH1HRR1QKBgQDo2xbSDPbZh5wpZTni6qBHb6pXNkftJwzn\n8vVpVnZckGL7iDqKNGw4kqCRdWBzeZnK4e+aHemS/Q9+hy0bDW9UcPjX+9TMm37M\njZk5H8uBqK6REX648n5Prn972b8glxFqFClQVU91n4J6I9P4ZU1faH0+SsAY6R6G\nHbVFIBzY8wKBgQDv8/FXCCEgc67mMbT9/xMGkY4Kbm3T2QchA/ilW+gzq2rgvhNg\n0ZL+oT7QvelsjARk3Y+yAip9K8uGa2mFg5zRei9TUO8x5eGVugLFCh23bomKXuDE\nDmfaLZYvjLQm9Crlv+B9Yio/pkAJSc6q++wmhaCac5RMdJFaqeOwTtewuQKBgQDg\nlZbABuL60VGrl0cqddMaszeen+rlb3mCKRHLhCnqgxQEt9KGQ6NxOPKG+KeLGGhd\nhmZaxajnLQ4JogS+B8otrjxDzE7k/MBiN9vlfaYBKxkbL72CUdfDsHCimlQ98ZZJ\nMqLaKT3XG35zoSSrecETWSsarmvyWr0m63ZO8ncAQwKBgQCorsoOhRhagSStmAHt\nVRt9jfg26o6+39mI0FEAjjanCfzkm7BieQHpqGeG4rvwedTNB4xgf3TH6lT7BbaM\nqPUajGFbndHzZDnrW9BiNJaOYacHuQvgibaN4qk7N5kXTUsOLjySmgCTNcJcHxwm\naeG0LnIEhNCCDI8mMTSrPdNCYg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "squid-data-sheet@squid-data.iam.gserviceaccount.com",
+  "client_id": "101077050654802253131",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/squid-data-sheet%40squid-data.iam.gserviceaccount.com"
+}
