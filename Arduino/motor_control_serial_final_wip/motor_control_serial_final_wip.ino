@@ -14,6 +14,7 @@ int dir = 0;
 
 int pulseWidthMicros = 20;  // microseconds
 int millisbetweenSteps = 50; // milliseconds - or try 1000 for slower steps basically speed
+int pos = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -32,13 +33,20 @@ void loop()
     Serial.write("Command Recieved\n");
       steps = Serial.parseInt();
       dir = Serial.parseInt();
+      if (steps == 9999){//set position to zero
+        pos = 0;
+      }
       if (dir == 1){
         digitalWrite(directionPin, HIGH);
       }
       if (dir == 0){
         digitalWrite(directionPin, LOW);
       }
+      if (steps != 9999){
       moveSteps();
+      }
+      //function to give out current position
+      Serial.println(pos);
     }
   
   delay(1000);
